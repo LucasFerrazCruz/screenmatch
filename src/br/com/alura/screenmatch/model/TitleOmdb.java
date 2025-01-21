@@ -1,5 +1,9 @@
 package br.com.alura.screenmatch.model;
 
-public record TitleOmdb(String title, String year, String runtime) {
+import com.google.gson.annotations.SerializedName;
 
+public record TitleOmdb(
+    @SerializedName("Title") String title,
+    @SerializedName("Year") String year,
+    @SerializedName("Runtime") String runtime) {
 }
