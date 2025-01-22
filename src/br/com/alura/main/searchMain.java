@@ -41,7 +41,9 @@ public class searchMain {
             Gson gson = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
             .create();
+
             TitleOmdb titleOmdb = gson.fromJson(json, TitleOmdb.class);
+            
             System.out.println(titleOmdb);
             
             Title title = new Title(titleOmdb);
