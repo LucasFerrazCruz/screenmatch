@@ -1,5 +1,6 @@
 package br.com.alura.main;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,8 +15,9 @@ import com.google.gson.GsonBuilder;
 import br.com.alura.config.Envloader;
 import br.com.alura.screenmatch.model.Title;
 import br.com.alura.screenmatch.model.TitleOmdb;
+import br.com.alura.screenmatch.model.TitleOmdbResponse;
 
-public class searchMain {
+public class SearchMain {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         Envloader envLoader = new Envloader(".env");
@@ -24,6 +26,7 @@ public class searchMain {
         Scanner movie = new Scanner(System.in);
         System.out.println("Digite um filme: ");
         var search = movie.nextLine();
+        movie.close();
         String url = "http://www.omdbapi.com/?s=" + search.replace(" ", "+") + "&apikey=" + apiKey;
         
         try {
@@ -42,13 +45,22 @@ public class searchMain {
             .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
             .create();
 
-            TitleOmdb titleOmdb = gson.fromJson(json, TitleOmdb.class);
+            TitleOmdbResponse titleOmdbResponse = gson.fromJson(json, TitleOmdbResponse.class);
+
+            if (titleOmdbResponse.search() != null && !titleOmdbResponse.search().isEmpty()) {
+                
+                TitleOmdb firstTitle = titleOmdbResponse.search().get(0);
             
-            System.out.println(titleOmdb);
+                Title title = new Title(firstTitle.title(), firstTitle.getYearAsInt());
+                System.out.println("Título já convertido:");
+                System.out.println(title);
             
-            Title title = new Title(titleOmdb);
-            System.out.println("Título já convertido");
-            System.out.println(title);
+                try (FileWriter writer = new FileWriter("movies.txt")) {
+                    writer.write(title.toString());
+                }
+            } else {
+                System.out.println("Nenhum filme encontrado para a pesquisa.");
+            }
 
         } catch (NumberFormatException e) {
 

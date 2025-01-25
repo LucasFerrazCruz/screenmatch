@@ -8,7 +8,7 @@ import br.com.alura.screenmatch.model.Movie;
 import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.model.Title;
 
-public class listMain {
+public class ListMain {
     public static void main(String[] args) {
         Movie myMovie = new Movie("Poderoso chefão", 1970);
         myMovie.evaluate(9);
